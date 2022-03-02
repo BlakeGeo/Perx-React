@@ -25,18 +25,16 @@ function App() {
   const getDogInfo = async () => {
     const result = await Axios.get(url);
     setLoading(true);
-    const dogData = result.data.map((dog) => ({
-      dogId: dog.id,
-      breed: dog.breeds.name,
-      // unable to obtain the array within breeds for manipulation, this is where the breed name lies.
-      // I was under the impression dog.breeds[0].name should work but to no avail
-      height: dog.height,
-      width: dog.width,
-      image: dog.url,
-    }));
+
+    const dogData = result.data.map(dog => {
+      return {
+        dogId: dog.id,
+        breed: dog.breeds[0],
+        image: dog.url,
+      }
+    })
 
     setDogs(dogData);
-    console.log(result.data);
   }
 
   useEffect(() => {
@@ -64,11 +62,9 @@ function App() {
                       <PopoverContent>
                         <PopoverArrow />
                         <PopoverCloseButton />
-                        <PopoverHeader>Good Boi Stats</PopoverHeader>
+                        <PopoverHeader>Breed</PopoverHeader>
                         <PopoverBody>
-                            Image height: {dog.height}px
-                            Image width: {dog.width}px
-                             {dog.breed ? `${dog.breed}` : ' Breed Unknown'}
+                          {dog.breed?.name || "Unknown"}
                         </PopoverBody>
                       </PopoverContent>
                     </Popover>
